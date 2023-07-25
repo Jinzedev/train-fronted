@@ -41,6 +41,9 @@
 import {reactive} from "vue";
 import {RocketTwoTone } from '@ant-design/icons-vue'
 import axios from 'axios';
+import {notification} from "ant-design-vue";
+import store from "@/store";
+import router from "@/router";
 
 const loginForm = reactive({
   mobile: '13000000000',
@@ -50,9 +53,29 @@ const sendCode = () => {
   axios.post("/member/sendCode", {
     mobile: loginForm.mobile
   }).then(response => {
-    console.log(response)
+    let data = response.data;
+    if (data.success) {
+      notification.success({ description: '发送验证码成功！' });
+      loginForm.code = "8888";
+    } else {
+      notification.error({ description: data.message });
+    }
   });
 };
+
+const login = () => {
+  axios.post("/member/login",loginForm).then((response) => {
+    let data = response.data;
+    if (data.success) {
+      notification.success({ description: '登录成功！' });
+      // 登录成功，跳到控台主页
+      router.push("/welcome");
+      store.commit("setMember", data.content);
+    } else {
+      notification.error({ description: data.message });
+    }
+  })
+}
 
 </script>
 
