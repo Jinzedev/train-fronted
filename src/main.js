@@ -10,7 +10,11 @@ import axios from "axios";
 const app = createApp(App)
 app.use(Antd).use(store).use(router).mount('#app');
 
-axios.defaults.baseURL = 'http://localhost:8000'
+axios.defaults.baseURL = process.env.VUE_APP_SERVER;
+
+console.log('环境：', process.env.NODE_ENV);
+console.log('服务端：', process.env.VUE_APP_SERVER);
+
 
 /**
  * axios拦截器
